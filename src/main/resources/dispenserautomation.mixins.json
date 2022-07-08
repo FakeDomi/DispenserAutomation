@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "re.domi.dispenserautomation.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "DispenserBlockEntityMixin",
+    "DispenserBlockMixin",
+    "EntityMixin",
+    "ServerWorldMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

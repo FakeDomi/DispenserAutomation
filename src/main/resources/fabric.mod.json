@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "dispenserautomation",
+  "version": "${version}",
+
+  "name": "Dispenser Automation",
+  "description": "Allows dispensers to place and break blocks, plus a few more things.",
+  "authors": [
+    "Domi"
+  ],
+  "contact": {
+    "homepage": "https://domi.re/mc-mods/dispenserautomation",
+    "sources": "https://github.com/FakeDomi/DispenserAutomation",
+    "issues": "https://github.com/FakeDomi/DispenserAutomation/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/dispenserautomation/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "re.domi.dispenserautomation.DispenserAutomation"
+    ]
+  },
+  "mixins": [
+    "dispenserautomation.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "fabric": "*",
+    "minecraft": "1.17.x"
+  }
+}
