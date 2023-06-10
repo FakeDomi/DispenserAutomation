@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import re.domi.dispenserautomation.DispenserTicker;
 
 @Mixin(value = DispenserBlockEntity.class, priority = 1500)
@@ -34,7 +33,7 @@ public abstract class DispenserBlockEntityMixin extends LootableContainerBlockEn
     }
 
     @Inject(method = "writeNbt", at = @At(value = "RETURN"))
-    private void writeNbt(NbtCompound nbt, CallbackInfoReturnable<NbtCompound> cir)
+    private void writeNbt(NbtCompound nbt, CallbackInfo ci)
     {
         if (this.task != null && this.world != null)
         {

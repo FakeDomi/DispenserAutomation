@@ -1,7 +1,5 @@
 package re.domi.dispenserautomation;
 
-import net.fabricmc.fabric.api.tool.attribute.v1.DynamicAttributeTool;
-import net.fabricmc.fabric.api.tool.attribute.v1.ToolManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -46,7 +44,7 @@ public abstract class Behavior
     static
     {
         behaviors.add(new Behavior((stack, stoneCutter) -> stoneCutter
-            && (stack.getItem() instanceof ToolItem || stack.getItem() instanceof ShearsItem || stack.getItem() instanceof DynamicAttributeTool)
+            && (stack.getItem() instanceof ToolItem || stack.getItem() instanceof ShearsItem)
             && (stack.getDamage() < stack.getMaxDamage() - 1 || EnchantmentHelper.getLevel(Enchantments.MENDING, stack) == 0))
         {
             @Override
@@ -62,12 +60,12 @@ public abstract class Behavior
                 BlockState s = w.getBlockState(actionPos);
                 float hardness = s.getHardness(w, actionPos);
 
-                if (hardness < 0 || (s.isToolRequired() && !ToolManager.handleIsEffectiveOn(s, stack, null)))
+                if (hardness < 0 || (s.isToolRequired() && !stack.isSuitableFor(s)))
                 {
                     return false;
                 }
 
-                float breakingSpeed = ToolManager.handleBreakingSpeed(s, stack, null);
+                float breakingSpeed = stack.getMiningSpeedMultiplier(s);
                 int efficiencyLevel = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
 
                 if (breakingSpeed > 0)

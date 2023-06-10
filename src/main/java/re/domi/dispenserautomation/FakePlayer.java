@@ -23,7 +23,7 @@ public class FakePlayer extends ServerPlayerEntity
 
     public FakePlayer(ServerWorld world, BlockPos pos, Direction facing, ItemStack heldItem)
     {
-        super(world.getServer(), world, fakeGameProfile);
+        super(world.getServer(), world, fakeGameProfile, null);
 
         switch (facing)
         {
