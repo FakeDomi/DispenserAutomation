@@ -92,7 +92,7 @@ public abstract class Behavior
                 BlockState state = world.getBlockState(actionPos);
                 BlockHitResult hitResult = new BlockHitResult(Behavior.getHitCoords(actionPos, dispenserFacing), dispenserFacing.getOpposite(), actionPos, false);
                 FakePlayer player = new FakePlayer(world, actionPos, dispenserFacing, stack);
-                ItemUsageContext ctx = new DumbItemUsageContext(world, player, Hand.MAIN_HAND, stack, hitResult);
+                ItemUsageContext ctx = new ItemUsageContext(world, player, Hand.MAIN_HAND, stack, hitResult);
 
                 if (stack.getItem().useOnBlock(ctx).isAccepted() ||
                     state.onUse(world, player, Hand.MAIN_HAND, hitResult).isAccepted())

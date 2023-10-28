@@ -3,13 +3,11 @@ package re.domi.dispenserautomation;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPointerImpl;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,7 +16,7 @@ import static net.minecraft.util.math.Direction.*;
 
 public class DispenserFireHook
 {
-    public static void injectDispense(ServerWorld world, BlockPos pos, CallbackInfo ci, BlockPointerImpl bp, DispenserBlockEntity d, int slot, ItemStack stack, DispenserBehavior vanillaBehavior)
+    public static void injectDispense(ServerWorld world, BlockPos pos, CallbackInfo ci, DispenserBlockEntity d, int slot, ItemStack stack)
     {
         boolean nextToStoneCutter = isNextToBlock(world, pos, Blocks.STONECUTTER);
 

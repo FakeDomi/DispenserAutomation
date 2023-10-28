@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -23,7 +24,7 @@ public class FakePlayer extends ServerPlayerEntity
 
     public FakePlayer(ServerWorld world, BlockPos pos, Direction facing, ItemStack heldItem)
     {
-        super(world.getServer(), world, fakeGameProfile);
+        super(world.getServer(), world, fakeGameProfile, SyncedClientOptions.createDefault());
 
         switch (facing)
         {

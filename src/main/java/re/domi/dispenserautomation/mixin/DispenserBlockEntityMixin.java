@@ -27,13 +27,13 @@ public abstract class DispenserBlockEntityMixin extends LootableContainerBlockEn
     private NbtCompound serializedTask;
 
     @Inject(method = "readNbt", at = @At(value = "RETURN"))
-    private void readNbt(NbtCompound nbt, CallbackInfo ci)
+    private void readTaskFromNbt(NbtCompound nbt, CallbackInfo ci)
     {
         this.serializedTask = nbt.getCompound("DispenserAutomationTask");
     }
 
     @Inject(method = "writeNbt", at = @At(value = "RETURN"))
-    private void writeNbt(NbtCompound nbt, CallbackInfo ci)
+    private void writeTaskToNbt(NbtCompound nbt, CallbackInfo ci)
     {
         if (this.task != null && this.world != null)
         {
@@ -48,8 +48,9 @@ public abstract class DispenserBlockEntityMixin extends LootableContainerBlockEn
         super.setWorld(world);
     }
 
+    // Scheduling of a previously unloaded task can only happen after the block entity has been deserialized and added to the world already
     @Inject(method = { "setWorld", "method_31662" }, at = @At("RETURN"), remap = false)
-    public void dispAuto_setWorld(World world, CallbackInfo ci)
+    public void scheduleTaskAfterLoad (World world, CallbackInfo ci)
     {
         if (world instanceof ServerWorld serverWorld)
         {

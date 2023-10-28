@@ -3,11 +3,10 @@ package re.domi.dispenserautomation.mixin;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPointerImpl;
+import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +21,7 @@ import re.domi.dispenserautomation.DispenserTicker;
 public abstract class DispenserBlockMixin extends AbstractBlock
 {
     @Inject(method = "onStateReplaced", at = @At("HEAD"))
-    protected void dispAuto_onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved, CallbackInfo ci)
+    protected void cancelOngoingTask(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved, CallbackInfo ci)
     {
         if (!state.isOf(newState.getBlock()) && world.getBlockEntity(pos) instanceof DispenserTicker.TaskHolder dispenser)
         {
@@ -35,10 +34,10 @@ public abstract class DispenserBlockMixin extends AbstractBlock
         }
     }
 
-    @Inject(method = "dispense", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/DispenserBlock;getBehaviorForItem(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/block/dispenser/DispenserBehavior;", shift = At.Shift.BY, by = 3), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
-    private void injectDispense(ServerWorld world, BlockPos pos, CallbackInfo ci, BlockPointerImpl b, DispenserBlockEntity d, int slot, ItemStack stack, DispenserBehavior vanillaBehavior)
+    @Inject(method = "dispense", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/block/DispenserBlock;getBehaviorForItem(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/block/dispenser/DispenserBehavior;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+    private void handleCustomBehavior(ServerWorld world, BlockState state, BlockPos pos, CallbackInfo ci, DispenserBlockEntity d, BlockPointer bp, int slot, ItemStack stack)
     {
-        DispenserFireHook.injectDispense(world, pos, ci, b, d, slot, stack, vanillaBehavior);
+        DispenserFireHook.injectDispense(world, pos, ci, d, slot, stack);
     }
 
     public DispenserBlockMixin()
