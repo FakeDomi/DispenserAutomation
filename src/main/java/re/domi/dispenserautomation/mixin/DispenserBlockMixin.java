@@ -34,7 +34,7 @@ public abstract class DispenserBlockMixin extends AbstractBlock
         }
     }
 
-    @Inject(method = "dispense", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/block/DispenserBlock;getBehaviorForItem(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/block/dispenser/DispenserBehavior;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "dispense", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/block/DispenserBlock;getBehaviorForItem(Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;)Lnet/minecraft/block/dispenser/DispenserBehavior;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void handleCustomBehavior(ServerWorld world, BlockState state, BlockPos pos, CallbackInfo ci, DispenserBlockEntity d, BlockPointer bp, int slot, ItemStack stack)
     {
         DispenserFireHook.injectDispense(world, pos, ci, d, slot, stack);

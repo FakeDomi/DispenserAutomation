@@ -5,11 +5,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Optional;
 
 public interface DispenserTicker
 {
@@ -74,10 +77,12 @@ public interface DispenserTicker
                 BlockState s = w.getBlockState(this.breakPos);
                 Block.dropStacks(s, w, this.breakPos, w.getBlockEntity(this.breakPos), null, this.stack);
 
-                if (s.getHardness(w, this.breakPos) > 0 && nowInSlot.damage(1, w.random, null))
+                if (s.getHardness(w, this.breakPos) > 0)
                 {
-                    nowInSlot.setCount(0);
-                    w.playSound(null, this.dispenserPos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 0.8F, 0.8F + w.random.nextFloat() * 0.4F);
+                    nowInSlot.damage(1, (ServerWorld) w, null, item ->
+                    {
+                        w.playSound(null, this.dispenserPos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 0.8F, 0.8F + w.random.nextFloat() * 0.4F);
+                    });
                 }
 
                 w.breakBlock(this.breakPos, false);
@@ -88,7 +93,7 @@ public interface DispenserTicker
             return true;
         }
 
-        public NbtCompound serialize(NbtCompound nbt, World world)
+        public NbtCompound serialize(NbtCompound nbt, World world, RegistryWrapper.WrapperLookup registryLookup)
         {
             nbt.putLong("StartTime", this.startTime);
             nbt.putLong("BreakTime", this.breakTime);
@@ -96,7 +101,7 @@ public interface DispenserTicker
             nbt.put("BreakPos", NbtHelper.fromBlockPos(this.breakPos));
             nbt.put("DispenserPos", NbtHelper.fromBlockPos(this.dispenserPos));
             nbt.putInt("SelectedSlot", this.selectedSlot);
-            nbt.put("Stack", this.stack.writeNbt(new NbtCompound()));
+            nbt.put("Stack", this.stack.encode(registryLookup));
 
             return nbt;
         }
@@ -105,16 +110,21 @@ public interface DispenserTicker
         {
             if (nbt != null && !nbt.isEmpty())
             {
-                BlockPos dispenserPos = NbtHelper.toBlockPos(nbt.getCompound("DispenserPos"));
+                Optional<BlockPos> breakPos = NbtHelper.toBlockPos(nbt, "BreakPos");
+                Optional<BlockPos> dispenserPos = NbtHelper.toBlockPos(nbt, "DispenserPos");
+                Optional<ItemStack> stack = ItemStack.fromNbt(world.getRegistryManager(), nbt.getCompound("Stack"));
 
-                createAndSchedule(world,
-                    nbt.getLong("StartTime") + world.getTime() - nbt.getLong("WorldTime"),
-                    nbt.getLong("BreakTime"),
-                    NbtHelper.toBlockPos(nbt.getCompound("BreakPos")),
-                    dispenserPos,
-                    taskHolder,
-                    nbt.getInt("SelectedSlot"),
-                    ItemStack.fromNbt(nbt.getCompound("Stack")));
+                if (breakPos.isPresent() && dispenserPos.isPresent() && stack.isPresent())
+                {
+                    createAndSchedule(world,
+                            nbt.getLong("StartTime") + world.getTime() - nbt.getLong("WorldTime"),
+                            nbt.getLong("BreakTime"),
+                            breakPos.get(),
+                            dispenserPos.get(),
+                            taskHolder,
+                            nbt.getInt("SelectedSlot"),
+                            stack.get());
+                }
             }
         }
 

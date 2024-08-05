@@ -4,6 +4,7 @@ import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,17 +28,17 @@ public abstract class DispenserBlockEntityMixin extends LootableContainerBlockEn
     private NbtCompound serializedTask;
 
     @Inject(method = "readNbt", at = @At(value = "RETURN"))
-    private void readTaskFromNbt(NbtCompound nbt, CallbackInfo ci)
+    private void readTaskFromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo ci)
     {
         this.serializedTask = nbt.getCompound("DispenserAutomationTask");
     }
 
     @Inject(method = "writeNbt", at = @At(value = "RETURN"))
-    private void writeTaskToNbt(NbtCompound nbt, CallbackInfo ci)
+    private void writeTaskToNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo ci)
     {
         if (this.task != null && this.world != null)
         {
-            nbt.put("DispenserAutomationTask", this.task.serialize(new NbtCompound(), this.world));
+            nbt.put("DispenserAutomationTask", this.task.serialize(new NbtCompound(), this.world, registryLookup));
         }
     }
 

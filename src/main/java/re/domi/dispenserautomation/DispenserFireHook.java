@@ -18,11 +18,11 @@ public class DispenserFireHook
 {
     public static void injectDispense(ServerWorld world, BlockPos pos, CallbackInfo ci, DispenserBlockEntity d, int slot, ItemStack stack)
     {
-        boolean nextToStoneCutter = isNextToBlock(world, pos, Blocks.STONECUTTER);
+        boolean isTouchingStoneCutter = isTouchingBlock(world, pos, Blocks.STONECUTTER);
 
-        if (nextToStoneCutter || isNextToBlock(world, pos, Blocks.SMITHING_TABLE))
+        if (isTouchingStoneCutter || isTouchingBlock(world, pos, Blocks.SMITHING_TABLE))
         {
-            Behavior behavior = Behavior.get(stack, nextToStoneCutter);
+            Behavior behavior = Behavior.get(world, stack, isTouchingStoneCutter);
 
             if (behavior != null)
             {
@@ -38,7 +38,7 @@ public class DispenserFireHook
         }
     }
 
-    public static boolean isNextToBlock(ServerWorld world, BlockPos pos, Block block)
+    public static boolean isTouchingBlock(ServerWorld world, BlockPos pos, Block block)
     {
         return world.getBlockState(pos.offset(UP)).getBlock().equals(block) ||
             world.getBlockState(pos.offset(DOWN)).getBlock().equals(block) ||
