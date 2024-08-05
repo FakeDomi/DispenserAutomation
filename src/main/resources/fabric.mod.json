@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Dispenser Automation",
-  "description": "Allows dispensers to place and break blocks, plus a few more things.",
+  "description": "Use dispensers to automatically break, place or use blocks and items!",
   "authors": [
     "Domi"
   ],
