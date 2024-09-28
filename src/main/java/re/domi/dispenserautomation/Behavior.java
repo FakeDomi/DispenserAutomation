@@ -117,6 +117,8 @@ public abstract class Behavior
                         }
                     }
 
+                    inventory.clear();
+
                     return true;
                 }
 
