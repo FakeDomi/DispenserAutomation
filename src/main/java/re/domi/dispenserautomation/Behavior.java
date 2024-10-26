@@ -7,8 +7,8 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ShearsItem;
-import net.minecraft.item.ToolItem;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -45,7 +45,7 @@ public abstract class Behavior
     static
     {
         behaviors.add(new Behavior((world, stack, isTouchingStoneCutter) -> isTouchingStoneCutter
-            && (stack.getItem() instanceof ToolItem || stack.getItem() instanceof ShearsItem)
+            && (stack.getItem() instanceof MiningToolItem || stack.getItem() instanceof ShearsItem)
             && (stack.getDamage() < stack.getMaxDamage() - 1 || DispenserAutomation.getEnchantmentLevel(world, stack, Enchantments.MENDING) == 0))
         {
             @Override
@@ -96,7 +96,8 @@ public abstract class Behavior
                 ItemUsageContext ctx = new ItemUsageContext(world, player, Hand.MAIN_HAND, stack, hitResult);
 
                 if (stack.getItem().useOnBlock(ctx).isAccepted() ||
-                    state.onUseWithItem(stack, world, player, Hand.MAIN_HAND, hitResult).isAccepted())
+                    state.onUseWithItem(stack, world, player, Hand.MAIN_HAND, hitResult).isAccepted() ||
+                    state.onUse(world, player, hitResult).isAccepted())
                 {
                     dispenser.setStack(slot, player.getStackInHand(Hand.MAIN_HAND));
                     player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);

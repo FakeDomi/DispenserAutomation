@@ -19,6 +19,6 @@ public class DispenserAutomation implements ModInitializer
 
     public static int getEnchantmentLevel(World world, ItemStack stack, RegistryKey<Enchantment> enchantment)
     {
-        return world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(enchantment).map(e -> EnchantmentHelper.getLevel(e, stack)).orElse(0);
+        return world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(enchantment.getValue()).map(e -> EnchantmentHelper.getLevel(e, stack)).orElse(0);
     }
 }

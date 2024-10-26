@@ -80,9 +80,7 @@ public interface DispenserTicker
                 if (s.getHardness(w, this.breakPos) > 0)
                 {
                     nowInSlot.damage(1, (ServerWorld) w, null, item ->
-                    {
-                        w.playSound(null, this.dispenserPos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 0.8F, 0.8F + w.random.nextFloat() * 0.4F);
-                    });
+                        w.playSound(null, this.dispenserPos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 0.8F, 0.8F + w.random.nextFloat() * 0.4F));
                 }
 
                 w.breakBlock(this.breakPos, false);
@@ -101,7 +99,7 @@ public interface DispenserTicker
             nbt.put("BreakPos", NbtHelper.fromBlockPos(this.breakPos));
             nbt.put("DispenserPos", NbtHelper.fromBlockPos(this.dispenserPos));
             nbt.putInt("SelectedSlot", this.selectedSlot);
-            nbt.put("Stack", this.stack.encode(registryLookup));
+            nbt.put("Stack", this.stack.toNbt(registryLookup));
 
             return nbt;
         }

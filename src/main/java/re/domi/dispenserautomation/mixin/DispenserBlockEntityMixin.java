@@ -50,6 +50,7 @@ public abstract class DispenserBlockEntityMixin extends LootableContainerBlockEn
     }
 
     // Scheduling of a previously unloaded task can only happen after the block entity has been deserialized and added to the world already
+    @SuppressWarnings({ "UnresolvedMixinReference", "MixinAnnotationTarget" })
     @Inject(method = { "setWorld", "method_31662" }, at = @At("RETURN"), remap = false)
     public void scheduleTaskAfterLoad (World world, CallbackInfo ci)
     {

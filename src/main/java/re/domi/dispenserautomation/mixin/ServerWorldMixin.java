@@ -29,6 +29,6 @@ public abstract class ServerWorldMixin extends World implements DispenserTicker
     protected ServerWorldMixin()
     {
         //noinspection ConstantConditions
-        super(null, null, null, null, null, false, false, 0, 0);
+        super(null, null, null, null, false, false, 0, 0);
     }
 }
